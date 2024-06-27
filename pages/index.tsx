@@ -16,8 +16,10 @@ const HomeNotAuth = function () {
                 />
             </Head>
             <main>
-                <HeaderNoAuth />
-                <PresentationSection />
+                <div className={styles.sectionBackground}>
+                    <HeaderNoAuth />
+                    <PresentationSection />
+                </div>
             </main>
         </>
     )
