@@ -4,8 +4,12 @@ import UserForm from "@/components/profile/user"
 import HeaderAuth from "@/components/common/headerAuth"
 import { Button, Col, Container, Row } from "reactstrap"
 import Footer from "@/components/common/footer"
+import { useState } from "react"
+import PasswordForm from "@/components/profile/password"
 
 const UserInfo = function () {
+    const [form, setForm] = useState("userForm")
+
     return (
         <>
             <Head>
@@ -20,15 +24,27 @@ const UserInfo = function () {
                     <p className={styles.title}>Minha Conta</p>
                     <Row className={styles.title}>
                         <Col className={styles.title}>
-                            <Button outline className={styles.renderFormBtn}>
+                            <Button
+                                outline
+                                className={styles.renderFormBtn}
+                                onClick={() => {
+                                    setForm("userForm")
+                                }}
+                            >
                                 DADOS PESSOAIS
                             </Button>
-                            <Button outline className={styles.renderFormBtn}>
+                            <Button
+                                outline
+                                className={styles.renderFormBtn}
+                                onClick={() => {
+                                    setForm("passwordForm")
+                                }}
+                            >
                                 SENHA
                             </Button>
                         </Col>
                         <Col md>
-                            <UserForm />
+                            {form === "userForm" ? <UserForm /> : <PasswordForm />}
                         </Col>
                     </Row>
                 </Container>
