@@ -1,36 +1,51 @@
-import HeaderAuth from "@/components/common/headerAuth";
+import HeaderAuth from "@/components/common/headerAuth"
 import styles from "../../styles/coursePage.module.scss"
 import Head from "next/head"
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import courseService, { CourseType } from "@/services/courseService";
-import { Button, Container } from "reactstrap";
-import PageSpinner from "@/components/common/spinner";
-import EpisodeList from "@/components/episodeList";
-import Footer from "@/components/common/footer";
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import courseService, { CourseType } from "@/services/courseService"
+import { Button, Container } from "reactstrap"
+import PageSpinner from "@/components/common/spinner"
+import EpisodeList from "@/components/episodeList"
+import Footer from "@/components/common/footer"
 
 const CoursePage = function () {
     const [course, setCourse] = useState<CourseType>()
     const [liked, setLiked] = useState(false)
     const [favorited, setFavorited] = useState(false)
+    const [loading, setLoading] = useState(true)
     const router = useRouter()
     const { id } = router.query
 
-    const getCourse = async function () {
-        if (typeof id !== "string") return
-
-        const res = await courseService.getEpisodes(id)
-
-        if (res.status === 200) {
-            setCourse(res.data)
-            setLiked(res.data.liked)
-            setFavorited(res.data.favorited)
+    useEffect(() => {
+        if (!sessionStorage.getItem('onebitflix-token')) {
+            router.push("/login")
+        } else {
+            setLoading(false)
         }
-    }
+    }, [])
 
     useEffect(() => {
-        getCourse()
+        const getCourse = async function () {
+            if (typeof id !== "string") return
+
+            const res = await courseService.getEpisodes(id)
+
+            if (res.status === 200) {
+                setCourse(res.data)
+                setLiked(res.data.liked)
+                setFavorited(res.data.favorited)
+            }
+        };
+
+        if (typeof id === "string" && id) {
+            getCourse();
+        }
     }, [id])
+
+    if (loading) {
+        return <PageSpinner />
+    }
 
     const handleLikeCourse = async () => {
         if (typeof id === "string") {
